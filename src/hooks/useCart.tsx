@@ -47,6 +47,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
       if (inStock < newQtd) {
         toast.error('Quantidade solicitada fora de estoque');
+        return;
       }
 
       if (cartItemAlreadyExists) {
@@ -70,6 +71,10 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     try {
       const myCart = [...cart];
       const filteredCart = myCart.filter(el => el.id !== productId);
+      if (filteredCart.length === myCart.length) {
+        toast.error('Erro na remoção do produto');
+        return;
+      }
       setCart(filteredCart);
       localStorage.setItem('@RocketShoes:cart', JSON.stringify(filteredCart));
     } catch {
@@ -90,6 +95,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       const inStock = await getQtdInStock(productId);
       if (amount > inStock) {
         toast.error('Quantidade solicitada fora de estoque');
+        return;
       } else {
         const myCart = [...cart];
         const cartItem = myCart.find(el => el.id === productId);
